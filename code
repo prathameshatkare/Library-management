@@ -1,0 +1,120 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+// Define a Book class
+class Book {
+private:
+    string title;
+    string author;
+    int id;
+    bool checkedOut;
+
+public:
+    Book(string t, string a, int i) : title(t), author(a), id(i), checkedOut(false) {}
+
+    string getTitle() const {
+        return title;
+    }
+
+    string getAuthor() const {
+        return author;
+    }
+
+    int getId() const {
+        return id;
+    }
+
+    bool isCheckedOut() const {
+        return checkedOut;
+    }
+
+    void checkOut() {
+        checkedOut = true;
+    }
+
+    void checkIn() {
+        checkedOut = false;
+    }
+};
+
+// Define a Library class
+class Library {
+private:
+    vector<Book> books;
+
+public:
+    void addBook(const Book &book) {
+        books.push_back(book);
+    }
+
+    void displayBooks() const {
+        cout << "Library Catalog:\n";
+        for (const auto &book : books) {
+            cout << "Title: " << book.getTitle() << ", Author: " << book.getAuthor() << ", ID: " << book.getId();
+            if (book.isCheckedOut()) {
+                cout << " (Checked out)";
+            } else {
+                cout << " (Available)";
+            }
+            cout << endl;
+        }
+    }
+
+    void checkOutBook(int id) {
+        for (auto &book : books) {
+            if (book.getId() == id) {
+                if (!book.isCheckedOut()) {
+                    book.checkOut();
+                    cout << "Book '" << book.getTitle() << "' checked out successfully.\n";
+                    return;
+                } else {
+                    cout << "Book '" << book.getTitle() << "' is already checked out.\n";
+                    return;
+                }
+            }
+        }
+        cout << "Book with ID " << id << " not found.\n";
+    }
+
+    void checkInBook(int id) {
+        for (auto &book : books) {
+            if (book.getId() == id) {
+                if (book.isCheckedOut()) {
+                    book.checkIn();
+                    cout << "Book '" << book.getTitle() << "' checked in successfully.\n";
+                    return;
+                } else {
+                    cout << "Book '" << book.getTitle() << "' is not checked out.\n";
+                    return;
+                }
+            }
+        }
+        cout << "Book with ID " << id << " not found.\n";
+    }
+};
+
+int main() {
+    Library library;
+
+    // Adding books to the library
+    library.addBook(Book("The Catcher in the Rye", "J.D. Salinger", 101));
+    library.addBook(Book("To Kill a Mockingbird", "Harper Lee", 102));
+    library.addBook(Book("1984", "George Orwell", 103));
+    library.addBook(Book("Pride and Prejudice", "Jane Austen", 104));
+
+    // Display all books in the library
+    library.displayBooks();
+
+    // Example of checking out and checking in a book
+    library.checkOutBook(102);
+    library.checkOutBook(103);
+    library.checkInBook(103);
+
+    // Display updated book status
+    library.displayBooks();
+
+    return 0;
+}
